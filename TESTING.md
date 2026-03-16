@@ -1,4 +1,4 @@
-# 🧪 Testing Guide - Smart Farm AIOps Platform
+#  Testing Guide - Smart Farm AIOps Platform
 
 ## Quick Test Scenarios
 
@@ -36,7 +36,7 @@
 
 5. **Verify auto-remediation:**
    - Check "Active Alerts" section
-   - **Expected:** Alerts show "Auto-remediation: ✅ Applied"
+   - **Expected:** Alerts show "Auto-remediation:  Applied"
    - Check cost estimates for each action
 
 ---
@@ -332,8 +332,6 @@ def test_aiops_monitor():
 ---
 
 ## Demo Checklist
-
-Before presenting the project, verify:
 
 - [ ] API server starts without errors
 - [ ] Dashboard loads and shows stats
