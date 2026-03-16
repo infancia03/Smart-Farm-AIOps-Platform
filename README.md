@@ -1,251 +1,225 @@
-# 🌾 Smart Farm AIOps Platform
+# Smart Farm AIOps Platform
 
 **AI-Powered Agricultural Monitoring & Auto-Remediation System**
 
-A complete overnight project showcasing **Agentic AI** + **AIOps** in AgriTech. Built with FastAPI, GPT-4 (via OpenRouter), and multi-agent orchestration.
+A platform that combines **Agentic AI** and **AIOps** to automate agricultural monitoring, anomaly detection, and corrective actions across smart farm sensor networks. Built with FastAPI, NVIDIA Nemotron 3 Super (via OpenRouter), and a multi-agent orchestration architecture.
 
 ---
 
-## 🎯 Project Highlights
+## Overview
 
-### **Resume-Worthy Features**
-
-✅ **Multi-Agent System**
-- **Diagnostic Agent**: Analyzes farm health using tool-calling (soil analysis, irrigation checks, pest detection)
-- **Action Agent**: Plans and executes remediation (irrigation, fertilization, alerts)
-- **Orchestrator**: Coordinates both agents for end-to-end automation
-
-✅ **AIOps Integration**
-- Real-time anomaly detection across sensor streams
-- Predictive trend analysis (forecasts irrigation needs, heat stress)
-- Auto-remediation engine (executes fixes automatically)
-- Cost tracking for every action (₹ per liter/kg/hour)
-
-✅ **Gen AI Features**
-- Natural language queries: "What fields need irrigation?"
-- Function calling/tool use with GPT-4
-- Context-aware reasoning across multiple data sources
-
-✅ **Production-Ready Stack**
-- FastAPI REST API with async background tasks
-- SQLAlchemy ORM with SQLite (easily switchable to MySQL)
-- Gradio interactive dashboard
-- Comprehensive logging and monitoring
+Traditional farm monitoring relies on manual inspection and reactive intervention. This platform addresses that gap by deploying AI agents that continuously analyze sensor data, detect anomalies, and autonomously execute remediation workflows — reducing the need for manual oversight and enabling faster response to field conditions.
 
 ---
 
-## 🏗️ Architecture
+## Key Features
+
+### Multi-Agent AI System
+- **Diagnostic Agent** — Analyzes farm health using tool-calling (soil analysis, irrigation checks, pest detection) powered by NVIDIA Nemotron 3 Super
+- **Action Agent** — Plans and executes remediation strategies (irrigation scheduling, fertilization, alerting)
+- **Orchestrator** — Coordinates both agents for end-to-end automation with iterative reasoning (up to 5 tool calls per query)
+
+### AIOps Engine
+- Real-time anomaly detection across multi-field sensor streams
+- Predictive trend analysis with configurable thresholds (temperature, moisture, pH, NPK)
+- Auto-remediation engine that triggers corrective actions upon alert creation
+- Cost tracking per action (₹ per litre/kg/hour) for operational budgeting
+
+### Natural Language Interface
+- Plain-English queries: *"Which fields need irrigation right now?"*
+- Function calling and tool use via NVIDIA Nemotron 3 Super
+- Context-aware reasoning across multiple data sources simultaneously
+
+### Production-Ready Stack
+- Async FastAPI REST API with background task processing
+- SQLAlchemy ORM with SQLite (configurable for MySQL/PostgreSQL)
+- Gradio interactive dashboard for real-time visualization
+- Systemd service management with auto-restart and health monitoring
+- Nginx reverse proxy with SSL-ready configuration
+
+---
+
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Gradio Dashboard UI                       │
-│         (Natural Language Queries + Visualizations)          │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-┌────────────────────▼────────────────────────────────────────┐
-│                   FastAPI REST API                           │
-│  /api/agent/query | /api/aiops/monitor | /api/sensors/data  │
-└─────┬──────────────────────────────┬─────────────────┬──────┘
-      │                              │                 │
-┌─────▼──────────┐         ┌─────────▼────────┐  ┌────▼─────┐
-│ Orchestrator   │         │  AIOps Engine    │  │ Database │
-│    Agent       │         │                  │  │ (SQLite/ │
-│                │         │ ┌──────────────┐ │  │  MySQL)  │
-│ ┌────────────┐ │         │ │  Anomaly     │ │  └──────────┘
-│ │ Diagnostic │ │         │ │  Detector    │ │
-│ │   Agent    │◄┼─────────┤ │              │ │
-│ │ (GPT-4)    │ │         │ └──────┬───────┘ │
-│ └──────┬─────┘ │         │        │         │
-│        │       │         │ ┌──────▼───────┐ │
-│ ┌──────▼─────┐ │         │ │ Auto-        │ │
-│ │  Action    │ │         │ │ Remediation  │ │
-│ │  Agent     │ │         │ │ Engine       │ │
-│ │ (GPT-4)    │ │         │ └──────────────┘ │
-│ └────────────┘ │         └──────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                     Gradio Dashboard UI                      │
+│          (Natural Language Queries + Visualizations)         │
+└─────────────────────┬────────────────────────────────────────┘
+                      │
+┌─────────────────────▼────────────────────────────────────────┐
+│                    FastAPI REST API                           │
+│   /api/agent/query | /api/aiops/monitor | /api/sensors/data  │
+└──────┬───────────────────────────────┬──────────────┬────────┘
+       │                               │              │
+┌──────▼─────────┐          ┌──────────▼───────┐  ┌──▼───────┐
+│  Orchestrator  │          │   AIOps Engine   │  │ Database │
+│     Agent      │          │                  │  │ SQLite / │
+│                │          │ ┌──────────────┐ │  │ MySQL    │
+│ ┌────────────┐ │          │ │  Anomaly     │ │  └──────────┘
+│ │ Diagnostic │ │          │ │  Detector    │ │
+│ │   Agent    │◄├──────────┤ └──────┬───────┘ │
+│ │ (Nemotron) │ │          │        │          │
+│ └─────┬──────┘ │          │ ┌──────▼────────┐ │
+│       │        │          │ │ Auto-         │ │
+│ ┌─────▼──────┐ │          │ │ Remediation   │ │
+│ │   Action   │ │          │ │ Engine        │ │
+│ │   Agent    │ │          │ └───────────────┘ │
+│ │ (Nemotron) │ │          └──────────────────-┘
+│ └────────────┘ │
 └────────────────┘
 
-┌─────────────────────────────────────────────────────────────┐
-│                   Sensor Tools (Function Calling)            │
-│  • analyze_soil_health()  • check_irrigation_efficiency()   │
-│  • detect_pest_patterns() • get_field_history()             │
-│  • trigger_irrigation()   • apply_fertilizer()              │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                  Sensor Tools (Function Calling)             │
+│  • analyze_soil_health()    • check_irrigation_efficiency()  │
+│  • detect_pest_patterns()   • get_field_history()            │
+│  • trigger_irrigation()     • apply_fertilizer()             │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Quick Start
+## Tech Stack
 
-### **Prerequisites**
+| Layer | Technology |
+|---|---|
+| API Framework | FastAPI (async) |
+| AI Model | NVIDIA Nemotron 3 Super via OpenRouter |
+| Dashboard | Gradio |
+| ORM | SQLAlchemy |
+| Database | SQLite (MySQL-ready) |
+| Process Management | systemd |
+| Reverse Proxy | Nginx |
+| Containerization | Docker + Docker Compose |
+| Language | Python 3.11 |
+
+---
+
+## Getting Started
+
+### Prerequisites
 - Python 3.9+
-- OpenRouter API Key (for GPT-4 access)
+- OpenRouter API Key with access to NVIDIA Nemotron 3 Super
 
-### **1. Installation**
+### 1. Installation
 
 ```bash
-cd smart-farm-aiops
+git clone https://github.com/infancia03/Smart-Farm-AIOps-Platform.git
+cd Smart-Farm-AIOps-Platform
 pip install -r requirements.txt
 ```
 
-### **2. Environment Setup**
-
-Create `.env` file from template:
+### 2. Environment Setup
 
 ```bash
 cp .env.example .env
+nano .env
 ```
-
-Edit `.env` and add your OpenRouter API key:
 
 ```env
 OPENROUTER_API_KEY=sk-or-v1-your-key-here
-OPENROUTER_MODEL=openai/gpt-4o
-
-# Optional: For MySQL (default uses SQLite)
-# DB_HOST=localhost
-# DB_USER=root
-# DB_PASSWORD=your_password
-# DB_NAME=smart_farm_db
+OPENROUTER_MODEL=nvidia/nemotron-super-3
+AUTO_REMEDIATION_ENABLED=true
 ```
 
-### **3. Generate Sample Data**
+### 3. Generate Sample Data
 
 ```bash
 python data/seed_data.py
 ```
 
-This creates 48 hours of sensor data for 5 fields with realistic patterns + anomalies.
+Creates 48 hours of sensor data across 5 fields with realistic patterns and injected anomalies.
 
-### **4. Start FastAPI Server**
+### 4. Start the API Server
 
 ```bash
-python app/main.py
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-API runs on `http://localhost:8000`
-- Swagger docs: http://localhost:8000/docs
-- Health check: http://localhost:8000/health
+- API: `http://localhost:8000`
+- Swagger docs: `http://localhost:8000/docs`
+- Health check: `http://localhost:8000/health`
 
-### **5. Launch Gradio Dashboard**
+### 5. Launch the Dashboard
 
 ```bash
 python ui/dashboard.py
 ```
 
-Dashboard runs on `http://localhost:7860`
+Dashboard: `http://localhost:7860`
 
 ---
 
-## 📊 Usage Examples
+## API Reference
 
-### **Natural Language Queries (Agentic AI)**
+### Sensors
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/sensors/data` | Submit a sensor reading |
+| GET | `/api/sensors/data/{field_id}` | Get historical readings |
+| GET | `/api/sensors/latest/{field_id}` | Get latest reading |
 
-```python
-# Through Gradio UI or API
-POST /api/agent/query
-{
-  "query": "What's the soil health status of field_A1?",
-  "field_id": "field_A1"
-}
+### Agentic AI
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/agent/query` | Natural language query |
+| GET | `/api/agent/recommendations/{field_id}` | Get AI recommendations |
+
+### AIOps
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/aiops/monitor` | Trigger anomaly detection |
+| GET | `/api/aiops/trends/{field_id}` | Trend analysis & predictions |
+
+### Alerts & Remediation
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/alerts` | List alerts with filters |
+| PATCH | `/api/alerts/{id}/resolve` | Resolve an alert |
+| POST | `/api/remediation/execute` | Trigger manual remediation |
+| GET | `/api/remediation/history` | View remediation logs |
+
+---
+
+## Usage Examples
+
+### Natural Language Query
+
+```bash
+curl -X POST http://localhost:8000/api/agent/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Which fields have nitrogen deficiency?", "field_id": null}'
 ```
 
-**Response:**
-- Diagnostic agent analyzes NPK levels, pH, moisture
-- Action agent suggests fertilization if deficient
-- Returns cost estimate and execution plan
+The diagnostic agent scans all fields, identifies NPK anomalies, and the action agent returns a prioritized fertilization plan with cost estimates.
 
-### **AIOps Anomaly Detection**
+### Trigger AIOps Monitor
 
-```python
-POST /api/aiops/monitor
-{
-  "field_id": "field_A1"  # or null for all fields
-}
+```bash
+curl -X POST http://localhost:8000/api/aiops/monitor \
+  -H "Content-Type: application/json" \
+  -d '{"field_id": "field_A1"}'
 ```
 
-**Auto-Remediation Workflow:**
-1. Detects low moisture (< 30%)
-2. Creates alert with severity
-3. Auto-triggers irrigation (300L)
-4. Logs action + cost (₹15)
-5. Updates alert status
+Detects anomalies, creates alerts, and auto-triggers remediation if `AUTO_REMEDIATION_ENABLED=true`.
 
-### **Trend Analysis & Predictions**
+### Trend Analysis
 
-```python
-GET /api/aiops/trends/field_A1?hours=24
+```bash
+curl http://localhost:8000/api/aiops/trends/field_A1?hours=24
 ```
 
-**Returns:**
-- Temperature/moisture trends
-- Predicted irrigation needs (with ETA)
-- Confidence scores
+Returns temperature/moisture trends, predicted irrigation needs with ETA, and confidence scores.
 
 ---
 
-## 🧪 Testing the System
-
-### **Scenario 1: Low Moisture Alert**
-
-1. Navigate to "AIOps" tab in dashboard
-2. Click "Run AIOps Monitor"
-3. System detects field_A1 has moisture < 30%
-4. Auto-remediation triggers irrigation
-5. Check "Active Alerts" to see remediation status
-
-### **Scenario 2: Natural Language Query**
-
-1. Go to "AI Agent" tab
-2. Enter: "Which fields have nitrogen deficiency?"
-3. Diagnostic agent scans all fields
-4. Action agent suggests fertilization plan
-5. View cost breakdown
-
-### **Scenario 3: Sensor Visualization**
-
-1. Select field from "Sensor Data" tab
-2. Choose time range (6-48 hours)
-3. View temperature, moisture, pH, NPK trends
-4. Identify anomalies visually
-
----
-
-## 🏆 Resume Talking Points
-
-**"Built a production-grade AIOps platform for smart agriculture that reduced manual intervention by 70%"**
-
-### **Technical Achievements:**
-
-1. **Multi-Agent Orchestration**
-   - Implemented diagnostic + action agents with GPT-4 tool calling
-   - 5+ sensor analysis tools with SQL integration
-   - Iterative agentic reasoning (up to 5 tool calls per query)
-
-2. **AIOps Implementation**
-   - Real-time anomaly detection across 5 fields
-   - Predictive analytics using time-series trend analysis
-   - Auto-remediation with cost optimization (₹0.05/L water, ₹45/kg fertilizer)
-
-3. **DevOps Integration**
-   - FastAPI async background tasks for monitoring
-   - SQLAlchemy ORM with migration support
-   - RESTful API with OpenAPI docs
-   - Gradio interactive dashboard
-
-4. **Domain Expertise**
-   - Agricultural sensor modeling (temperature, moisture, NPK, pH)
-   - Crop health diagnostics (nutrient deficiency, pest risk)
-   - Irrigation efficiency algorithms
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 smart-farm-aiops/
 ├── app/
 │   ├── agents/
-│   │   ├── diagnostic_agent.py    # GPT-4 diagnostic reasoning
+│   │   ├── diagnostic_agent.py    # AI diagnostic reasoning
 │   │   ├── action_agent.py        # Remediation planning
 │   │   └── orchestrator.py        # Multi-agent coordinator
 │   ├── aiops/
@@ -255,99 +229,45 @@ smart-farm-aiops/
 │   │   └── sensor_tools.py        # Function calling tools
 │   ├── database.py                # SQLAlchemy models
 │   ├── models.py                  # Pydantic schemas
-│   └── main.py                    # FastAPI app
+│   └── main.py                    # FastAPI application
 ├── data/
 │   └── seed_data.py               # Sample data generator
 ├── ui/
 │   └── dashboard.py               # Gradio interface
 ├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
 ├── .env.example
 └── README.md
 ```
 
 ---
 
-## 🔧 API Endpoints
+## Deployment
 
-### **Sensors**
-- `POST /api/sensors/data` - Submit sensor reading
-- `GET /api/sensors/data/{field_id}` - Get historical data
-- `GET /api/sensors/latest/{field_id}` - Latest reading
+### Docker
 
-### **Agentic AI**
-- `POST /api/agent/query` - Natural language query
-- `GET /api/agent/recommendations/{field_id}` - Get recommendations
+```bash
+docker-compose up -d
+```
 
-### **AIOps**
-- `POST /api/aiops/monitor` - Trigger anomaly detection
-- `GET /api/aiops/trends/{field_id}` - Trend analysis
+### EC2 with systemd
 
-### **Alerts**
-- `GET /api/alerts` - List alerts (with filters)
-- `PATCH /api/alerts/{id}/resolve` - Resolve alert
-
-### **Remediation**
-- `POST /api/remediation/execute` - Manual remediation
-- `GET /api/remediation/history` - Action history
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for full production setup including Nginx reverse proxy, SSL configuration, and systemd service files.
 
 ---
 
-## 🎓 Learning Outcomes
+## Future Roadmap
 
-### **You've Built:**
-✅ A complete agentic AI system with tool calling  
-✅ AIOps monitoring with auto-remediation  
-✅ RESTful API with async background tasks  
-✅ Interactive dashboard with real-time updates  
-✅ Database-backed application with ORM  
-
-### **Skills Demonstrated:**
-- Gen AI integration (OpenRouter/GPT-4)
-- Multi-agent orchestration
-- Anomaly detection algorithms
-- REST API design
-- Full-stack development (FastAPI + Gradio)
+- [ ] ESP32/MQTT integration for real hardware sensors
+- [ ] WhatsApp/SMS alert delivery via Twilio
+- [ ] Custom ML models for crop-specific anomaly thresholds
+- [ ] Multi-crop support with agronomic knowledge base
+- [ ] Prometheus metrics endpoint + Grafana dashboard
+- [ ] React Native mobile dashboard
 
 ---
 
-## 🚀 Extensions (Post-Demo)
+## Acknowledgements
 
-1. **Add Real Hardware**: Connect ESP32 sensors via MQTT
-2. **Deploy to Cloud**: AWS EC2 + RDS MySQL
-3. **WhatsApp Alerts**: Integrate Twilio/Instaalerts API
-4. **Advanced ML**: Train custom anomaly detection models
-5. **Multi-Crop Support**: Crop-specific thresholds & recommendations
-6. **Mobile App**: Flutter/React Native dashboard
-
----
-
-## 📝 License
-
-MIT License - Free to use for portfolios and interviews!
-
----
-
-## 🤝 Credits
-
-**Built with:**
-- FastAPI (Web framework)
-- OpenRouter (GPT-4 access)
-- Gradio (Dashboard UI)
-- SQLAlchemy (ORM)
-- Matplotlib (Visualizations)
-
-**Inspired by:** Real-world AgriTech challenges in precision farming
-
----
-
-## 📧 Contact
-
-Built as an overnight project for demonstrating Agentic AI + AIOps skills.
-
-**Perfect for:** DevOps engineers pivoting to AI/ML roles, AgriTech interviews, Gen AI portfolio projects
-
----
-
-**⏱️ Build Time:** 6-8 hours  
-**💡 Complexity:** Intermediate-Advanced  
-**🎯 Impact:** High (showcases multiple trending technologies)
+Built with [FastAPI](https://fastapi.tiangolo.com), [OpenRouter](https://openrouter.ai), [Gradio](https://gradio.app), [SQLAlchemy](https://sqlalchemy.org), and [NVIDIA Nemotron 3 Super](https://build.nvidia.com/nvidia/nemotron-super-49b-v1).
