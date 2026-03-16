@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend
+  api:
+    build: .
+    container_name: smart-farm-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-openai/gpt-4o}
+      - ANOMALY_THRESHOLD_TEMP=${ANOMALY_THRESHOLD_TEMP:-35.0}
+      - ANOMALY_THRESHOLD_MOISTURE=${ANOMALY_THRESHOLD_MOISTURE:-30.0}
+      - AUTO_REMEDIATION_ENABLED=${AUTO_REMEDIATION_ENABLED:-true}
+    volumes:
+      - ./smart_farm.db:/app/smart_farm.db
+      - ./data:/app/data
+    command: python app/main.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Gradio Dashboard
+  dashboard:
+    build: .
+    container_name: smart-farm-dashboard
+    ports:
+      - "7860:7860"
+    depends_on:
+      - api
+    environment:
+      - API_BASE_URL=http://api:8000
+    command: python ui/dashboard.py
+    restart: unless-stopped
+
+  # Optional: MySQL Database (uncomment to use instead of SQLite)
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: smart-farm-mysql
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+  #     - MYSQL_DATABASE=${DB_NAME}
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   restart: unless-stopped
+
+# volumes:
+#   mysql_data:
