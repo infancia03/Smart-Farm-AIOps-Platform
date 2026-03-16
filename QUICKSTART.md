@@ -122,7 +122,6 @@ curl http://localhost:8000/api/alerts?resolved=false
 - **Documentation:** 2,000+ lines
 - **Technologies:** FastAPI, SQLAlchemy, GPT-4, Gradio, Docker
 - **Features:** Multi-agent AI, AIOps, cost tracking, auto-remediation
-- **Build Time:** 6-8 hours (overnight project)
 
 ---
 
