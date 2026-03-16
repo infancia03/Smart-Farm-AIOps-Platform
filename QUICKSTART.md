@@ -1,6 +1,6 @@
-# 🚀 QUICK START - Smart Farm AIOps Platform
+#  QUICK START - Smart Farm AIOps Platform
 
-## ⚡ Get Running in 5 Minutes
+## Get Running in 5 Minutes
 
 ### Prerequisites
 - Python 3.9+ installed
@@ -48,7 +48,7 @@ This runs automated tests showing all features.
 
 ---
 
-## 🎯 First Things to Try
+##  First Things to Try
 
 ### In the Gradio Dashboard (http://localhost:7860):
 
@@ -66,7 +66,7 @@ This runs automated tests showing all features.
 
 ---
 
-## 📝 .env Configuration
+##  .env Configuration
 
 Minimum required in `.env`:
 ```bash
@@ -83,7 +83,7 @@ AUTO_REMEDIATION_ENABLED=true
 
 ---
 
-## 🧪 Quick Test via API
+##  Quick Test via API
 
 ```bash
 # Get dashboard stats
@@ -106,7 +106,7 @@ curl http://localhost:8000/api/alerts?resolved=false
 
 ---
 
-## 📚 Documentation Structure
+##  Documentation Structure
 
 - **README.md** - Complete project guide
 - **TESTING.md** - Testing scenarios and validation
@@ -116,7 +116,7 @@ curl http://localhost:8000/api/alerts?resolved=false
 
 ---
 
-## 🔍 Project Statistics
+##  Project Statistics
 
 - **Total Code:** 2,346 lines of Python
 - **Documentation:** 2,000+ lines
@@ -125,17 +125,17 @@ curl http://localhost:8000/api/alerts?resolved=false
 
 ---
 
-## 💡 What This Demonstrates
+##  What This Demonstrates
 
-✅ **Agentic AI** - Multi-agent orchestration with tool calling  
-✅ **AIOps** - Real-time anomaly detection + auto-remediation  
-✅ **Full-Stack** - API + database + interactive UI  
-✅ **Production-Ready** - Docker, deployment guides, monitoring  
-✅ **Domain Expertise** - AgriTech problem solving  
+ **Agentic AI** - Multi-agent orchestration with tool calling  
+ **AIOps** - Real-time anomaly detection + auto-remediation  
+ **Full-Stack** - API + database + interactive UI  
+ **Production-Ready** - Docker, deployment guides, monitoring  
+ **Domain Expertise** - AgriTech problem solving  
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 **"ModuleNotFoundError"**
 ```bash
@@ -159,26 +159,4 @@ lsof -ti:8000 | xargs kill -9
 
 ---
 
-## 🎯 Next Steps
 
-1. ✅ Get it running locally (follow steps above)
-2. 📹 Record a demo video
-3. 📸 Take screenshots of dashboard
-4. 🚀 Deploy to AWS (see DEPLOYMENT.md)
-5. 💼 Add to portfolio
-6. 🎤 Prepare demo (see PRESENTATION.md)
-
----
-
-## 📧 Support
-
-For questions or issues:
-1. Check TESTING.md for common scenarios
-2. Review API docs at http://localhost:8000/docs
-3. See troubleshooting section above
-
----
-
-**Ready to impress in interviews!** 🚀
-
-Built with ❤️ for demonstrating Agentic AI + AIOps skills.
